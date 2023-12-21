@@ -1,8 +1,18 @@
 [package]
-name = "opt_vec"
+name = "opt_struct"
 version = "0.1.1"
 edition = "2021"
 authors = ["merl <merl.001.mia@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+description = "Optional collections"
 
+repository = "https://github.com/merl-twin/opt-struct"
+homepage = "https://github.com/merl-twin/opt-struct"
+
+include = [
+    "**/*.rs",
+    "Cargo.toml",
+]
 
 [dependencies]
