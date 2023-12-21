@@ -1,4 +1,5 @@
-Optional collections:
-   OptVec
-   OptHashSet
-   OptHashMap
+Optional collections
+
+* OptVec
+* OptHashSet
+* OptHashMap
