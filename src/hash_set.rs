@@ -204,6 +204,7 @@ impl<T: Hash + Eq> OptHashSet<T> {
         }
     }
 
+    #[inline]
     pub fn contains(&self, value: &T) -> bool {
         match self {
             OptHashSet::None => false,
@@ -216,11 +217,34 @@ impl<T: Hash + Eq> OptHashSet<T> {
             OptHashSet::Set(v) => v.contains(value),
         }
     }
-    
+
+    #[inline]
     pub fn iter(&self) -> Iter<T> {
         self.into_iter()
     }
 
+    #[inline]
+    pub fn has_intersection(&self, other: &OptHashSet<T>) -> bool {
+        match (self,other) {
+            (OptHashSet::None,_) |
+            (_,OptHashSet::None) => false,
+            (OptHashSet::One(v1),OptHashSet::One(v2)) => *v1 == *v2,
+            (OptHashSet::Set(hv1),OptHashSet::Set(hv2)) => hv1.intersection(hv2).next().is_some(),
+            (_,_) => {
+                match other.len() > self.len() {
+                    true => for v1 in self.iter() {
+                        if other.contains(v1) { return true; }
+                    },
+                    false => for v2 in other.iter() {
+                        if self.contains(v2) { return true; }
+                    },
+                }
+                false
+            },
+        }
+    }
+    
+    #[inline]
     pub fn intersection_size(&self, other: &OptHashSet<T>) -> usize {
         match (self,other) {
             (OptHashSet::None,_) |
@@ -245,6 +269,7 @@ impl<T: Hash + Eq> OptHashSet<T> {
         }
     }
 
+    #[inline]
     pub fn unite(self, other: OptHashSet<T>) -> OptHashSet<T> {
         match (self,other) {
             (OptHashSet::None,qs) | (qs,OptHashSet::None) => qs,
@@ -265,7 +290,7 @@ impl<T: Hash + Eq> OptHashSet<T> {
         }
     }
 
-
+    #[inline]
     pub fn intersect(self, other: OptHashSet<T>) -> OptHashSet<T> {
         match (self,other) {
             (OptHashSet::None,_) |
@@ -294,6 +319,7 @@ impl<T: Hash + Eq> OptHashSet<T> {
         }
     }
 
+    #[inline]
     pub fn filter_set<B, F>(self, mut f: F) -> OptHashSet<B>
     where F: FnMut(T) -> Option<B>,
           B: Eq + Hash
@@ -314,6 +340,7 @@ impl<T: Hash + Eq> OptHashSet<T> {
 }
 
 impl<T: Eq + Hash + Clone> OptHashSet<T> {
+    #[inline]
     pub fn intersection(&self, other: &OptHashSet<T>) -> OptHashSet<T> {
         match (self,other) {
             (OptHashSet::None,_) |
