@@ -87,6 +87,17 @@ impl<T> OptVec<T> {
             false => OptVec::None,
         }
     }
+
+    pub fn into_vec(self) -> Option<Vec<T>> {
+        match self {
+            OptVec::None => None,
+            OptVec::One(t1) => Some(vec![t1]),
+            OptVec::Two([t1,t2]) => Some(vec![t1,t2]),
+            OptVec::Three([t1,t2,t3]) => Some(vec![t1,t2,t3]),
+            OptVec::Vec(v) => Some(v),
+        }
+    }
+    
     pub fn take(&mut self) -> OptVec<T> {
         let mut tmp = OptVec::None;
         std::mem::swap(self, &mut tmp);
